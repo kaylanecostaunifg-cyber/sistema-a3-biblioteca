@@ -1,9 +1,24 @@
+import sys
+import os
+from pathlib import Path
+
+# Fixa o caminho da raiz e da pasta src no sys.path de forma absoluta
+RAIZ_PROJETO = Path(__file__).resolve().parent
+PASTA_SRC = RAIZ_PROJETO / "src"
+
+if str(RAIZ_PROJETO) not in sys.path:
+    sys.path.insert(0, str(RAIZ_PROJETO))
+if str(PASTA_SRC) not in sys.path:
+    sys.path.insert(0, str(PASTA_SRC))
+
+# `src` já foi adicionado ao `sys.path`; portanto, importe o pacote diretamente.
+from dominio.modelos.aluno import Aluno
+from dominio.modelos.professor import Professor
+from dominio.modelos.livro import Livro
+from dominio.modelos.emprestimo import Emprestimo
+from dominio.servicos.calculador_multa import CalculadorMulta  # type: ignore[reportMissingImports]
+
 from datetime import datetime, timedelta
-from src.dominio.modelos.aluno import Aluno
-from src.dominio.modelos.professor import Professor
-from src.dominio.modelos.livro import Livro
-from src.dominio.modelos.emprestimo import Emprestimo
-from src.dominio.servicos.calculador_multa import CalculadorMulta
 
 
 def executar_testes():
