@@ -1,0 +1,15 @@
+# Dependências (ex: Node, Python ou Java)
+node_modules/
+venv/
+.venv/
+target/
+*.class
+
+# Ficheiros do Sistema Operativo e IDEs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Ficheiros de ambiente/senhas
+.env
