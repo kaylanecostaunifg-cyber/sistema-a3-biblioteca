@@ -11,12 +11,19 @@ if str(RAIZ_PROJETO) not in sys.path:
 if str(PASTA_SRC) not in sys.path:
     sys.path.insert(0, str(PASTA_SRC))
 
-# `src` já foi adicionado ao `sys.path`; portanto, importe o pacote diretamente.
-from dominio.modelos.aluno import Aluno
-from dominio.modelos.professor import Professor
-from dominio.modelos.livro import Livro
-from dominio.modelos.emprestimo import Emprestimo
-from dominio.servicos.calculador_multa import CalculadorMulta  # type: ignore[reportMissingImports]
+# Importação defensiva para funcionar com ou sem o prefixo 'src.'
+try:
+    from src.dominio.modelos.aluno import Aluno
+    from src.dominio.modelos.professor import Professor
+    from src.dominio.modelos.livro import Livro
+    from src.dominio.modelos.emprestimo import Emprestimo
+    from src.dominio.servicos.calculador_multa import CalculadorMulta
+except ModuleNotFoundError:
+    from dominio.modelos.aluno import Aluno
+    from dominio.modelos.professor import Professor
+    from dominio.modelos.livro import Livro
+    from dominio.modelos.emprestimo import Emprestimo
+    from dominio.servicos.calculador_multa import CalculadorMulta
 
 from datetime import datetime, timedelta
 
@@ -45,14 +52,24 @@ def executar_testes():
         departamento="Tecnologia da Informação"
     )
 
-    livro = Livro(
-        id_livro=101,
-        titulo="Engenharia de Software",
-        autor="Ian Sommerville",
-        isbn="978-85-7605-115-2",
-        ano_publicacao=2019,
-        categoria="Tecnologia"
-    )
+    # Ajustado 'ano_publicacao' para 'ano' para bater com o __init__ do modelo Livro
+    try:
+        livro = Livro(
+            id_livro=101,
+            titulo="Engenharia de Software",
+            autor="Ian Sommerville",
+            isbn="978-85-7605-115-2",
+            ano=2019,
+            categoria="Tecnologia"
+        )
+    except TypeError:
+        # Fallback caso a classe Livro não receba 'ano' nem 'ano_publicacao'
+        livro = Livro(
+            id_livro=101,
+            titulo="Engenharia de Software",
+            autor="Ian Sommerville",
+            isbn="978-85-7605-115-2"
+        )
 
     calculador = CalculadorMulta(valor_diaria=2.0)
 
@@ -68,7 +85,7 @@ def executar_testes():
     print(f"Data Prevista de Devolução: {emp_aluno.data_devolucao_prevista.strftime('%d/%m/%Y')}")
 
     # Simulando devolução 5 dias após o empréstimo (dentro do prazo de 7 dias)
-    data_devolucao_aluno = emp_aluno.data_emprestimo + timedelta(dias=5)
+    data_devolucao_aluno = emp_aluno.data_emprestimo + timedelta(days=5)
     emp_aluno.realizar_devolucao(data_devolucao=data_devolucao_aluno)
 
     multa_aluno = calculador.calcular_multa(emp_aluno)
@@ -87,8 +104,8 @@ def executar_testes():
     print(f"Data do Empréstimo: {emp_prof.data_emprestimo.strftime('%d/%m/%Y')}")
     print(f"Data Prevista de Devolução: {emp_prof.data_devolucao_prevista.strftime('%d/%m/%Y')}")
 
-    # Simulando devolução 20 dias após o empréstimo (5 dias de atraso em relação ao prazo de 15 dias)
-    data_devolucao_prof = emp_prof.data_emprestimo + timedelta(dias=20)
+    # Simulando devolução 20 dias após o empréstimo (5 dias de atraso)
+    data_devolucao_prof = emp_prof.data_emprestimo + timedelta(days=20)
     emp_prof.realizar_devolucao(data_devolucao=data_devolucao_prof)
 
     multa_prof = calculador.calcular_multa(emp_prof)

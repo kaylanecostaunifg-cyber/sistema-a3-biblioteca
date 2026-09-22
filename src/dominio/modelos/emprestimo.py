@@ -13,7 +13,7 @@ class Emprestimo:
         
         # O prazo é calculado dinamicamente conforme o perfil (Aluno = 7 dias, Professor = 15 dias)
         dias_prazo = self._usuario.obter_prazo_devolucao_dias()
-        self._data_devolucao_prevista = self._data_emprestimo + timedelta(dias=dias_prazo)
+        self._data_devolucao_prevista = self._data_emprestimo + timedelta(days=dias_prazo)
         
         self._data_devolucao_real: Optional[datetime] = None
         self._status = "ATIVO"  # ATIVO, CONCLUIDO, ATRASADO
