@@ -56,7 +56,7 @@ def inicializar_banco():
         """)
         
         conn.commit()
-        print("✅ Banco de dados criado e inicializado com sucesso!")
+        print("Banco de dados criado e inicializado com sucesso!")
 
 if __name__ == "__main__":
     inicializar_banco()

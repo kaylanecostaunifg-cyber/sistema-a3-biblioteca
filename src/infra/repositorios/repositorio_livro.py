@@ -34,3 +34,26 @@ class RepositorioLivroSQLite:
                 livro = Livro(id_livro=id_l, titulo=titulo, autor=autor, isbn=isbn, ano=ano, categoria=categoria)
                 livros.append(livro)
         return livros
+    def buscar_por_titulo(self, termo: str) -> list[Livro]:
+        """Busca livros que contenham o termo no título (busca parcial e sem case sensitive)."""
+        livros = []
+        with obter_conexao() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT id_livro, titulo, autor, isbn, ano, categoria FROM livros WHERE titulo LIKE ?",
+                (f"%{termo}%",)
+            )
+            linhas = cursor.fetchall()
+
+            for linha in linhas:
+                id_l, titulo, autor, isbn, ano, categoria = linha
+                livro = Livro(
+                    id_livro=id_l, 
+                    titulo=titulo, 
+                    autor=autor, 
+                    isbn=isbn, 
+                    ano=ano, 
+                    categoria=categoria if categoria else "Geral"
+                )
+                livros.append(livro)
+        return livros
