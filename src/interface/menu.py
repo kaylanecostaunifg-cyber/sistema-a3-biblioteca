@@ -1,6 +1,17 @@
 import importlib
 from datetime import datetime
+from tkinter import messagebox
 
+# Infraestrutura (Persistência no SQLite)
+from infra.repositorios.repositorio_usuario import RepositorioUsuarioSQLite
+from infra.repositorios.repositorio_livro import RepositorioLivroSQLite
+from src.infra.banco import inicializar_banco
+from infra.repositorios.repositorio_emprestimo import RepositorioEmprestimoSQLite
+
+# Domínio (Modelos e Regras de Negócio)
+from dominio.modelos.aluno import Aluno
+from dominio.modelos.livro import Livro
+from dominio.servicos.servico_emprestimo import ServicoEmprestimo
 
 def _carregar_classe(module_name, class_name):
     for candidato in (module_name, f"src.{module_name}"):

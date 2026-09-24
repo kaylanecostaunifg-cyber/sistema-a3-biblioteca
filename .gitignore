@@ -13,3 +13,6 @@ Thumbs.db
 
 # Ficheiros de ambiente/senhas
 .env
+
+*.db
+dados/
